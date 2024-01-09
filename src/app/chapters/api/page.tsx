@@ -3,12 +3,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import MenuBar from "@/components/MenuBar";
+import Popup from "@/components/Popup";
 
 export default function Api() {
     const NASA_API_KEY = "8YynInIn6BOaDJ4ip2dWXJJEyeHF9ZSk2GwbMTOh";
     const [apodSrc, setApodSrc] = useState("");
     const [apodTitle, setApodTitle] = useState("");
     const [apodExplanation, setApodExplanation] = useState("");
+    const [isPopup, setIsPopup] = useState(false);
 
     useEffect(() => {
         axios
@@ -25,24 +27,33 @@ export default function Api() {
             <MenuBar />
             <div className="max-w-[1200px] w-full mx-auto">
                 <div className="w-full grid grid-cols-4 grid-rows-4 h-[700px] gap-4">
-                    <div className="row-span-4 col-span-2 bg-[#232820] rounded-3xl flex flex-col px-2 py-4">
-                        <h2 className="text-3xl text-center">Astronomy picture of the day</h2>
+                    <div
+                        className="row-span-4 col-span-2 bg-[#232820] rounded-3xl flex flex-col px-2 py-4 cursor-pointer hover:bg-[#3e4a36] transition-all"
+                        onClick={() => setIsPopup(!isPopup)}
+                    >
+                        <h2 className="text-3xl text-center">
+                            Astronomy picture of the day
+                        </h2>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={apodSrc}
                             alt="Astronomy picture of the day"
-                            className="object-contain rounded-3xl my-5"
+                            className="object-cover rounded-3xl my-5 h-[79%]"
                         />
 
                         <h3 className="text-2xl mb-1">{apodTitle}</h3>
-                        <p className="overflow-hidden text-ellipsis inline-block max-w-full">{apodExplanation}</p>
+                        <p className="overflow-hidden text-ellipsis inline-block max-w-full whitespace-nowrap">
+                            {apodExplanation}
+                        </p>
                     </div>
-                    {/* TODO: переполнение текстового блока с описанием, перевод, попап с полным описанием */}
+                    {/* TODO: перевод, попап с полным описанием */}
                     <div className="row-span-2 col-span-2 bg-[#232820] rounded-3xl"></div>
                     <div className="row-start-3 col-start-3  bg-[#232820] rounded-3xl"></div>
                     <div className="row-start-4 col-start-3 bg-[#232820] rounded-3xl"></div>
                     <div className="row-start-3 row-span-2 col-start-4 bg-[#232820] rounded-3xl"></div>
                 </div>
             </div>
+            {isPopup && <Popup isPopup={isPopup} setIsPopup={setIsPopup} />}
         </>
     );
 }
